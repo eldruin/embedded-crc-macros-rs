@@ -171,8 +171,8 @@ macro_rules! crc8_lookup_table {
     };
 }
 
-/// Define structure implementing the CRC-8 algorithm for the given polynomial and initial value
-/// as a `core::hash::Hasher` trait implementation.
+/// Define public structure implementing the CRC-8 algorithm for the given polynomial
+/// and initial value as a `core::hash::Hasher` trait implementation.
 ///
 /// A struct name and some documentation for it must be provided. For example:
 /// ```rust
@@ -191,7 +191,7 @@ macro_rules! crc8_lookup_table {
 macro_rules! crc8_hasher {
     ($struct_name:ident, $poly:expr, $initial_value:expr, $doc:expr) => {
         #[doc=$doc]
-        struct $struct_name {
+        pub struct $struct_name {
             crc: u8,
         }
 
@@ -226,7 +226,7 @@ macro_rules! crc8_hasher {
     };
 }
 
-/// Define structure implementing the CRC-8 algorithm as a `core::hash::Hasher`
+/// Define public structure implementing the CRC-8 algorithm as a `core::hash::Hasher`
 /// trait implementation using a pre-calculated lookup table.
 ///
 /// This implementation is much faster at the cost of some space.
@@ -256,7 +256,7 @@ macro_rules! crc8_hasher {
 macro_rules! crc8_hasher_lookup_table {
     ($name:ident, $initial_value:expr, $doc:expr) => {
         #[doc=$doc]
-        struct $name {
+        pub struct $name {
             crc: u8,
         }
 
