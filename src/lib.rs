@@ -196,6 +196,7 @@ macro_rules! crc8_hasher {
         }
 
         impl $struct_name {
+            /// Create new instance
             pub fn new() -> Self {
                 $struct_name {
                     crc: $initial_value,
