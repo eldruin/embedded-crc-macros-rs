@@ -24,3 +24,13 @@ edition = "2018"
 travis-ci = { repository = "eldruin/embedded-crc-macros-rs", branch = "master" }
 coveralls = { repository = "eldruin/embedded-crc-macros-rs", branch = "master", service = "github" }
 
+[[bench]]
+name = "benchmarks"
+harness = false
+
+[dev-dependencies]
+criterion = "0.3"
+rand = "0.6"
+
+[profile.bench]
+debug = true # for perf
