@@ -1,5 +1,5 @@
 mod base;
-use base::SMBUS_PEC_LOOKUP_TABLE as LOOKUP_TABLE;
+use self::base::SMBUS_PEC_LOOKUP_TABLE as LOOKUP_TABLE;
 use embedded_crc_macros::crc8_lookup_table;
 
 crc8_lookup_table!(smbus_pec, 0, "SMBus Packet Error Code");
