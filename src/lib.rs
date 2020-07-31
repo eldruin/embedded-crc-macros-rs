@@ -254,13 +254,13 @@ macro_rules! crc8_hasher {
 /// ```
 #[macro_export]
 macro_rules! crc8_hasher_lookup_table {
-    ($name:ident, $initial_value:expr, $doc:expr) => {
+    ($struct_name:ident, $initial_value:expr, $doc:expr) => {
         #[doc=$doc]
-        pub struct $name {
+        pub struct $struct_name {
             crc: u8,
         }
 
-        impl $name {
+        impl $struct_name {
             /// Create new instance
             pub fn new() -> Self {
                 Self {
@@ -269,7 +269,7 @@ macro_rules! crc8_hasher_lookup_table {
             }
         }
 
-        impl core::hash::Hasher for $name {
+        impl core::hash::Hasher for $struct_name {
             #[inline]
             fn write(&mut self, bytes: &[u8]) {
                 for byte in bytes {
