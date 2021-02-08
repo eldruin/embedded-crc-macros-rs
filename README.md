@@ -2,7 +2,7 @@
 
 [![crates.io](https://img.shields.io/crates/v/embedded-crc-macros.svg)](https://crates.io/crates/embedded-crc-macros)
 [![Docs](https://docs.rs/embedded-crc-macros/badge.svg)](https://docs.rs/embedded-crc-macros)
-[![Build Status](https://travis-ci.com/eldruin/embedded-crc-macros-rs.svg?branch=master)](https://travis-ci.com/eldruin/embedded-crc-macros-rs)
+[![Build Status](https://github.com/eldruin/embedded-crc-macros-rs/workflows/Build/badge.svg)](https://github.com/eldruin/embedded-crc-macros-rs/actions?query=workflow%3ABuild)
 [![Coverage Status](https://coveralls.io/repos/github/eldruin/embedded-crc-macros-rs/badge.svg?branch=master)](https://coveralls.io/github/eldruin/embedded-crc-macros-rs?branch=master)
 
 This crate provides macros that define portable [CRC-8][crc8] algorithm implementations

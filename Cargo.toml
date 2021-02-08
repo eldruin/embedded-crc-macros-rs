@@ -20,10 +20,6 @@ include = [
 ]
 edition = "2018"
 
-[badges]
-travis-ci = { repository = "eldruin/embedded-crc-macros-rs", branch = "master" }
-coveralls = { repository = "eldruin/embedded-crc-macros-rs", branch = "master", service = "github" }
-
 [[bench]]
 name = "benchmarks"
 harness = false
