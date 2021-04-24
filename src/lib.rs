@@ -51,6 +51,9 @@
 //! ## Define a function computing the SMBus PEC algorithm using a pre-calculated lookup table
 //!
 //! A lookup table must be defined in the same environment as `LOOKUP_TABLE`.
+//! This can be generated in the `build.rs` file with the
+//! [build_rs_lookup_table_file_generation](macro.build_rs_lookup_table_file_generation.html)
+//! macro.
 //! ```rust
 //! use embedded_crc_macros::crc8_lookup_table;
 //!
@@ -145,9 +148,15 @@ macro_rules! crc8 {
 /// This implementation is much faster at the cost of some space.
 /// A function name and some documentation for it must be provided.
 ///
-/// The lookup table can be generated in the `build.rs` file with the
+/// The lookup table must be stored in a `LOOKUP_TABLE` constant and can be generated
+/// in the `build.rs` file with the
 /// [build_rs_lookup_table_file_generation](macro.build_rs_lookup_table_file_generation.html)
 /// macro and then included like in the following example.
+///
+/// You can find an example using this in the [`smbus-pec`] crate.
+///
+/// [`smbus-pec`]: https://crates.io/crates/smbus-pec
+///
 /// ```rust
 /// use embedded_crc_macros::crc8_lookup_table;
 /// // include!(concat!(env!("OUT_DIR"), "/lookup_table.rs"));
@@ -240,9 +249,15 @@ macro_rules! crc8_hasher {
 /// This implementation is much faster at the cost of some space.
 /// A struct name and some documentation for it must be provided.
 ///
-/// The lookup table can be generated in the `build.rs` file with the
+/// The lookup table must be stored in a `LOOKUP_TABLE` constant and can be generated
+/// in the `build.rs` file with the
 /// [build_rs_lookup_table_file_generation](macro.build_rs_lookup_table_file_generation.html)
 /// macro and then included like in the following example.
+///
+/// You can find an example on how to do this in the [`smbus-pec`] crate.
+///
+/// [`smbus-pec`]: https://crates.io/crates/smbus-pec
+///
 /// ```rust
 /// use core::hash::Hasher;
 /// use embedded_crc_macros::crc8_hasher_lookup_table;
