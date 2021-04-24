@@ -22,3 +22,26 @@ fn check_pec_array() {
     hasher.write(&[ADDR << 1, REGISTER, 0xAB, 0xCD]);
     assert_eq!(hasher.finish(), 95);
 }
+
+#[test]
+fn new_is_the_same_as_default() {
+    assert_eq!(SmbusPec::new(), SmbusPec::default());
+}
+
+#[test]
+fn can_be_copied() {
+    let pec = SmbusPec::new();
+    let copy = pec;
+    assert_eq!(pec, copy);
+}
+
+#[test]
+fn can_be_debug_printed() {
+    println!("{:?}", SmbusPec::new());
+}
+
+#[test]
+fn macro_can_be_used_within_function() {
+    crc8_hasher_lookup_table!(struct H, 2, "hasher");
+    let _ = H::new();
+}

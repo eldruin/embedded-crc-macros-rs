@@ -39,3 +39,9 @@ fn can_be_copied() {
 fn can_be_debug_printed() {
     println!("{:?}", SmbusPec::new());
 }
+
+#[test]
+fn macro_can_be_used_within_function() {
+    crc8_hasher!(struct H, 7, 2, "hasher");
+    let _ = H::new();
+}
