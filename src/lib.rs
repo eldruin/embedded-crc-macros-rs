@@ -191,6 +191,7 @@ macro_rules! crc8_lookup_table {
 macro_rules! crc8_hasher {
     ($struct_name:ident, $poly:expr, $initial_value:expr, $doc:expr) => {
         #[doc=$doc]
+        #[derive(Debug, Clone, Copy, PartialEq, Eq)]
         pub struct $struct_name {
             crc: u8,
         }
@@ -201,6 +202,12 @@ macro_rules! crc8_hasher {
                 $struct_name {
                     crc: $initial_value,
                 }
+            }
+        }
+
+        impl Default for $struct_name {
+            fn default() -> Self {
+                Self::new()
             }
         }
 
@@ -257,6 +264,7 @@ macro_rules! crc8_hasher {
 macro_rules! crc8_hasher_lookup_table {
     ($struct_name:ident, $initial_value:expr, $doc:expr) => {
         #[doc=$doc]
+        #[derive(Debug, Clone, Copy, PartialEq, Eq)]
         pub struct $struct_name {
             crc: u8,
         }
@@ -267,6 +275,12 @@ macro_rules! crc8_hasher_lookup_table {
                 Self {
                     crc: $initial_value,
                 }
+            }
+        }
+
+        impl Default for $struct_name {
+            fn default() -> Self {
+                Self::new()
             }
         }
 

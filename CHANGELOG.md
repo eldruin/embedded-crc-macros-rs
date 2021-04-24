@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-...
+### Added
+- Implement `Debug`, `Clone`, `Copy`, `PartialEq`, `Eq` and `Default` traits for hasher structs.
 
 ## [0.1.0] - 2020-08-09
 
