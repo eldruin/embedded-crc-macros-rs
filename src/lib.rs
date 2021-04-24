@@ -344,7 +344,7 @@ macro_rules! build_rs_lookup_table_file_generation {
             file.write_all(
                 concat!(
                     "const ",
-                    stringify!($constant_name),
+                    stringify!($lookup_table_constant_name),
                     ": [",
                     stringify!($t),
                     ";",
