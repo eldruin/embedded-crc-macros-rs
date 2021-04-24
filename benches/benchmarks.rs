@@ -1,5 +1,5 @@
 use core::hash::Hasher;
-use criterion::{black_box, criterion_group, criterion_main, Criterion, Throughput};
+use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion, Throughput};
 use embedded_crc_macros::{crc8, crc8_hasher, crc8_hasher_lookup_table, crc8_lookup_table};
 use rand::{rngs::SmallRng, FromEntropy, Rng};
 
@@ -23,19 +23,23 @@ fn bench(c: &mut Criterion) {
         group.throughput(Throughput::Bytes(*size as u64));
         let mut data: Vec<u8> = Vec::with_capacity(*size);
         fill_random(&mut data);
-        group.bench_with_input(format!("pec/{}", *size), &data, |b, data| {
+        group.bench_with_input(BenchmarkId::new("fn", *size), &data, |b, data| {
             b.iter(|| {
                 let pec = pec(data);
                 black_box(&pec);
             });
         });
-        group.bench_with_input(format!("pec_lookup_table/{}", *size), &data, |b, data| {
-            b.iter(|| {
-                let pec = pec_lookup_table(data);
-                black_box(&pec);
-            });
-        });
-        group.bench_with_input(format!("pec_hasher/{}", *size), &data, |b, data| {
+        group.bench_with_input(
+            BenchmarkId::new("fn_lookup_table", *size),
+            &data,
+            |b, data| {
+                b.iter(|| {
+                    let pec = pec_lookup_table(data);
+                    black_box(&pec);
+                });
+            },
+        );
+        group.bench_with_input(BenchmarkId::new("hasher", *size), &data, |b, data| {
             b.iter(|| {
                 let mut hasher = SmbusPec::new();
                 hasher.write(data);
@@ -44,7 +48,7 @@ fn bench(c: &mut Criterion) {
             });
         });
         group.bench_with_input(
-            format!("pec_hasher_lookup_table/{}", *size),
+            BenchmarkId::new("hasher_lookup_table", *size),
             &data,
             |b, data| {
                 b.iter(|| {
