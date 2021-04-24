@@ -50,14 +50,14 @@
 //!
 //! ## Define a function computing the SMBus PEC algorithm using a pre-calculated lookup table
 //!
-//! A lookup table must be defined in the same environment as `LOOKUP_TABLE`.
+//! A lookup table constant must be defined in the same environment.
 //! This can be generated in the `build.rs` file with the
 //! [build_rs_lookup_table_file_generation](macro.build_rs_lookup_table_file_generation.html)
 //! macro.
 //! ```rust
 //! use embedded_crc_macros::crc8_lookup_table;
 //!
-//! crc8_lookup_table!(fn smbus_pec, 0, "SMBus Packet Error Code");
+//! crc8_lookup_table!(fn smbus_pec, 0, LOOKUP_TABLE, "SMBus Packet Error Code");
 //!
 //! const ADDR: u8 = 0x5A;
 //! let command = 0x06;
@@ -88,7 +88,7 @@
 //!
 //! ## `core::hash::Hasher` implementation using a pre-calculated lookup table.
 //!
-//! A lookup table must be defined in the same environment as `LOOKUP_TABLE`.
+//! A lookup table constant must be defined in the same environment.
 //! This can be generated in the `build.rs` file with the
 //! [build_rs_lookup_table_file_generation](macro.build_rs_lookup_table_file_generation.html)
 //! macro.
@@ -97,7 +97,7 @@
 //! use embedded_crc_macros::crc8_hasher_lookup_table;
 //!
 //! // include!(concat!(env!("OUT_DIR"), "/lookup_table.rs"));
-//! crc8_hasher_lookup_table!(struct SmbusPec, 0, "SMBus Packet Error Code");
+//! crc8_hasher_lookup_table!(struct SmbusPec, 0, LOOKUP_TABLE, "SMBus Packet Error Code");
 //!
 //! let mut hasher = SmbusPec::new();
 //! hasher.write(&[0xAB, 0xCD]);
@@ -148,19 +148,19 @@ macro_rules! crc8 {
 /// This implementation is much faster at the cost of some space.
 /// A function name and some documentation for it must be provided.
 ///
-/// The lookup table must be stored in a `LOOKUP_TABLE` constant and can be generated
-/// in the `build.rs` file with the
+/// The lookup table must be stored in a constant defined in the same environment
+/// and can be generated in the `build.rs` file with the
 /// [build_rs_lookup_table_file_generation](macro.build_rs_lookup_table_file_generation.html)
 /// macro and then included like in the following example.
 ///
-/// You can find an example using this in the [`smbus-pec`] crate.
+/// You can also find an example using this in the [`smbus-pec`] crate.
 ///
 /// [`smbus-pec`]: https://crates.io/crates/smbus-pec
 ///
 /// ```rust
 /// use embedded_crc_macros::crc8_lookup_table;
 /// // include!(concat!(env!("OUT_DIR"), "/lookup_table.rs"));
-/// crc8_lookup_table!(fn pec, 0, "SMBus Packet Error Code");
+/// crc8_lookup_table!(fn pec, 0, LOOKUP_TABLE, "SMBus Packet Error Code");
 ///
 /// # // This can be generated on build time with the
 /// # // `build_rs_lookup_table_file_generation` macro.
@@ -168,12 +168,12 @@ macro_rules! crc8 {
 /// ```
 #[macro_export]
 macro_rules! crc8_lookup_table {
-    (fn $function_name:ident, $initial_value:expr, $doc:expr) => {
+    (fn $function_name:ident, $initial_value:expr, $lookup_table:ident, $doc:expr) => {
         #[doc=$doc]
         pub fn $function_name(data: &[u8]) -> u8 {
             let mut crc = $initial_value;
             for byte in data {
-                crc = LOOKUP_TABLE[(crc ^ *byte) as usize];
+                crc = $lookup_table[(crc ^ *byte) as usize];
             }
             crc
         }
@@ -249,12 +249,12 @@ macro_rules! crc8_hasher {
 /// This implementation is much faster at the cost of some space.
 /// A struct name and some documentation for it must be provided.
 ///
-/// The lookup table must be stored in a `LOOKUP_TABLE` constant and can be generated
-/// in the `build.rs` file with the
+/// The lookup table must be stored in a constant defined in the same environment
+/// and can be generated in the `build.rs` file with the
 /// [build_rs_lookup_table_file_generation](macro.build_rs_lookup_table_file_generation.html)
 /// macro and then included like in the following example.
 ///
-/// You can find an example on how to do this in the [`smbus-pec`] crate.
+/// You can also find an example on how to do this in the [`smbus-pec`] crate.
 ///
 /// [`smbus-pec`]: https://crates.io/crates/smbus-pec
 ///
@@ -263,7 +263,7 @@ macro_rules! crc8_hasher {
 /// use embedded_crc_macros::crc8_hasher_lookup_table;
 ///
 /// // include!(concat!(env!("OUT_DIR"), "/lookup_table.rs"));
-/// crc8_hasher_lookup_table!(struct SmbusPec, 0, "SMBus Packet Error Code");
+/// crc8_hasher_lookup_table!(struct SmbusPec, 0, LOOKUP_TABLE, "SMBus Packet Error Code");
 ///
 /// let mut hasher = SmbusPec::new();
 /// hasher.write(&[0xAB, 0xCD]);
@@ -277,7 +277,7 @@ macro_rules! crc8_hasher {
 /// ```
 #[macro_export]
 macro_rules! crc8_hasher_lookup_table {
-    (struct $struct_name:ident, $initial_value:expr, $doc:expr) => {
+    (struct $struct_name:ident, $initial_value:expr, $lookup_table:ident, $doc:expr) => {
         #[doc=$doc]
         #[derive(Debug, Clone, Copy, PartialEq, Eq)]
         pub struct $struct_name {
@@ -303,7 +303,7 @@ macro_rules! crc8_hasher_lookup_table {
             #[inline]
             fn write(&mut self, bytes: &[u8]) {
                 for byte in bytes {
-                    self.crc = LOOKUP_TABLE[(self.crc ^ *byte) as usize];
+                    self.crc = $lookup_table[(self.crc ^ *byte) as usize];
                 }
             }
 
@@ -317,14 +317,14 @@ macro_rules! crc8_hasher_lookup_table {
 
 /// Code generation macro for use in `build.rs` files.
 ///
-/// Generate file containing a `LOOKUP_TABLE` constant with all the values for the checksum function.
+/// Generate file containing a lookup table constant with all the values for the checksum function.
 ///
 /// Example `build.rs` file:
 /// ```no_run
 /// use embedded_crc_macros::{crc8, build_rs_lookup_table_file_generation};
 ///
 /// crc8!(fn smbus_pec, 7, 0, "");
-/// build_rs_lookup_table_file_generation!(fn write_file, smbus_pec, "lookup_table.rs", u8, 256);
+/// build_rs_lookup_table_file_generation!(fn write_file, smbus_pec, LOOKUP_TABLE, "lookup_table.rs", u8, 256);
 ///
 /// fn main() {
 ///     println!("cargo:rerun-if-changed=build.rs");
@@ -335,7 +335,7 @@ macro_rules! crc8_hasher_lookup_table {
 /// ```
 #[macro_export]
 macro_rules! build_rs_lookup_table_file_generation {
-    (fn $function_name:ident, $checksum_function:ident, $lookup_table_file:expr, $t:ty, $size:expr) => {
+    (fn $function_name:ident, $checksum_function:ident, $lookup_table_constant_name:ident, $lookup_table_file:expr, $t:ty, $size:expr) => {
         fn $function_name() -> std::io::Result<()> {
             use std::io::prelude::*;
             let out_path = std::path::PathBuf::from(std::env::var("OUT_DIR").unwrap());
@@ -343,7 +343,9 @@ macro_rules! build_rs_lookup_table_file_generation {
             let mut file = std::fs::File::create(out_path)?;
             file.write_all(
                 concat!(
-                    "const LOOKUP_TABLE: [",
+                    "const ",
+                    stringify!($constant_name),
+                    ": [",
                     stringify!($t),
                     ";",
                     stringify!($size),

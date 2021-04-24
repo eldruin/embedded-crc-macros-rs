@@ -1,12 +1,12 @@
 mod base;
-use self::base::SMBUS_PEC_LOOKUP_TABLE as LOOKUP_TABLE;
+use self::base::SMBUS_PEC_LOOKUP_TABLE;
 use embedded_crc_macros::crc8_lookup_table;
 
-crc8_lookup_table!(fn smbus_pec, 0, "SMBus Packet Error Code");
+crc8_lookup_table!(fn smbus_pec, 0, SMBUS_PEC_LOOKUP_TABLE, "SMBus Packet Error Code");
 
 #[test]
 fn check_pec_table() {
-    for (i, expected) in LOOKUP_TABLE.iter().enumerate() {
+    for (i, expected) in SMBUS_PEC_LOOKUP_TABLE.iter().enumerate() {
         assert_eq!(smbus_pec(&[i as u8]), *expected);
     }
 }

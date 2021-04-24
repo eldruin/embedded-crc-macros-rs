@@ -11,8 +11,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Implement `Debug`, `Clone`, `Copy`, `PartialEq`, `Eq` and `Default` traits for hasher structs.
 
 ### Changed
-- [breaking-change] add `fn` and `struct` keywords in macros to make invocations
+- [breaking-change] Add `fn` and `struct` keywords in macros to make invocations
   evocative of the output.
+- [breaking-change] Allow providing name for lookup table constant.
 
 ## [0.1.0] - 2020-08-09
 

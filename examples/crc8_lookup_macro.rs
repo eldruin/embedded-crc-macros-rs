@@ -1,6 +1,6 @@
 use embedded_crc_macros::crc8_lookup_table;
 
-crc8_lookup_table!(fn smbus_pec, 0, "SMBus Packet Error Code");
+crc8_lookup_table!(fn smbus_pec, 0, LOOKUP_TABLE, "SMBus Packet Error Code");
 
 const ADDRESS: u8 = 0x5A;
 const REGISTER: u8 = 0x06;

@@ -1,13 +1,13 @@
 mod base;
-use self::base::SMBUS_PEC_LOOKUP_TABLE as LOOKUP_TABLE;
+use self::base::SMBUS_PEC_LOOKUP_TABLE;
 use core::hash::Hasher;
 use embedded_crc_macros::crc8_hasher_lookup_table;
 
-crc8_hasher_lookup_table!(struct SmbusPec, 0, "SMBus Packet Error Code");
+crc8_hasher_lookup_table!(struct SmbusPec, 0, SMBUS_PEC_LOOKUP_TABLE, "SMBus Packet Error Code");
 
 #[test]
 fn check_pec_table() {
-    for (i, expected) in LOOKUP_TABLE.iter().enumerate() {
+    for (i, expected) in SMBUS_PEC_LOOKUP_TABLE.iter().enumerate() {
         let mut hasher = SmbusPec::new();
         hasher.write(&[i as u8]);
         assert_eq!(hasher.finish(), *expected as u64);
@@ -42,6 +42,6 @@ fn can_be_debug_printed() {
 
 #[test]
 fn macro_can_be_used_within_function() {
-    crc8_hasher_lookup_table!(struct H, 2, "hasher");
+    crc8_hasher_lookup_table!(struct H, 2, SMBUS_PEC_LOOKUP_TABLE, "hasher");
     let _ = H::new();
 }
