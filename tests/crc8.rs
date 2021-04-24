@@ -2,7 +2,7 @@ mod base;
 use self::base::SMBUS_PEC_LOOKUP_TABLE as LOOKUP_TABLE;
 use embedded_crc_macros::crc8;
 
-crc8!(smbus_pec, 7, 0, "SMBus Packet Error Code");
+crc8!(fn smbus_pec, 7, 0, "SMBus Packet Error Code");
 
 #[test]
 fn check_pec_table() {

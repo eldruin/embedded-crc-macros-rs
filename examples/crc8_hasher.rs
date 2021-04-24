@@ -1,7 +1,7 @@
 use core::hash::Hasher;
 use embedded_crc_macros::crc8_hasher;
 
-crc8_hasher!(
+crc8_hasher!(struct
     SmbusPec,
     7, /* x^8+x^2+x+1 */
     0,

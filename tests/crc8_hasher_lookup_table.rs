@@ -3,7 +3,7 @@ use self::base::SMBUS_PEC_LOOKUP_TABLE as LOOKUP_TABLE;
 use core::hash::Hasher;
 use embedded_crc_macros::crc8_hasher_lookup_table;
 
-crc8_hasher_lookup_table!(SmbusPec, 0, "SMBus Packet Error Code");
+crc8_hasher_lookup_table!(struct SmbusPec, 0, "SMBus Packet Error Code");
 
 #[test]
 fn check_pec_table() {

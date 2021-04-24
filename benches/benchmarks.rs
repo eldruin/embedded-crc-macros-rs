@@ -6,10 +6,10 @@ use criterion::{
 use embedded_crc_macros::{crc8, crc8_hasher, crc8_hasher_lookup_table, crc8_lookup_table};
 use rand::{rngs::SmallRng, FromEntropy, Rng};
 
-crc8!(pec, 7, 0, "");
-crc8_lookup_table!(pec_lookup_table, 0, "");
-crc8_hasher!(SmbusPec, 7, 0, "");
-crc8_hasher_lookup_table!(SmbusPecLookupTable, 0, "");
+crc8!(fn pec, 7, 0, "");
+crc8_lookup_table!(fn pec_lookup_table, 0, "");
+crc8_hasher!(struct SmbusPec, 7, 0, "");
+crc8_hasher_lookup_table!(struct SmbusPecLookupTable, 0, "");
 
 fn do_pec_bench(b: &mut Bencher, size: &usize) {
     let mut v: Vec<u8> = Vec::with_capacity(*size);

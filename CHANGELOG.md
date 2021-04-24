@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Implement `Debug`, `Clone`, `Copy`, `PartialEq`, `Eq` and `Default` traits for hasher structs.
 
+### Changed
+- [breaking-change] add `fn` and `struct` keywords in macros to make invocations
+  evocative of the output.
+
 ## [0.1.0] - 2020-08-09
 
 Initial release to crates.io.

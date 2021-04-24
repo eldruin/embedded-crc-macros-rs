@@ -1,7 +1,7 @@
 use core::hash::Hasher;
 use embedded_crc_macros::crc8_hasher_lookup_table;
 
-crc8_hasher_lookup_table!(SmbusPec, 0, "SMBus Packet Error Code");
+crc8_hasher_lookup_table!(struct SmbusPec, 0, "SMBus Packet Error Code");
 
 const ADDRESS: u8 = 0x5A;
 const REGISTER: u8 = 0x06;
