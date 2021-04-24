@@ -1,55 +1,12 @@
 use core::hash::Hasher;
-use criterion::{
-    black_box, criterion_group, criterion_main, Bencher, Criterion, ParameterizedBenchmark,
-    Throughput,
-};
+use criterion::{black_box, criterion_group, criterion_main, Criterion, Throughput};
 use embedded_crc_macros::{crc8, crc8_hasher, crc8_hasher_lookup_table, crc8_lookup_table};
 use rand::{rngs::SmallRng, FromEntropy, Rng};
 
 crc8!(fn pec, 7, 0, "");
-crc8_lookup_table!(fn pec_lookup_table, 0, "");
+crc8_lookup_table!(fn pec_lookup_table, 0, LOOKUP_TABLE, "");
 crc8_hasher!(struct SmbusPec, 7, 0, "");
-crc8_hasher_lookup_table!(struct SmbusPecLookupTable, 0, "");
-
-fn do_pec_bench(b: &mut Bencher, size: &usize) {
-    let mut v: Vec<u8> = Vec::with_capacity(*size);
-    fill_random(&mut v);
-    b.iter(|| {
-        let pec = pec(&v);
-        black_box(&pec);
-    });
-}
-
-fn do_pec_lookup_table_bench(b: &mut Bencher, size: &usize) {
-    let mut v: Vec<u8> = Vec::with_capacity(*size);
-    fill_random(&mut v);
-    b.iter(|| {
-        let pec = pec_lookup_table(&v);
-        black_box(&pec);
-    });
-}
-
-fn do_pec_hasher_bench(b: &mut Bencher, size: &usize) {
-    let mut v: Vec<u8> = Vec::with_capacity(*size);
-    fill_random(&mut v);
-    b.iter(|| {
-        let mut hasher = SmbusPec::new();
-        hasher.write(&v);
-        let pec = hasher.finish();
-        black_box(&pec);
-    });
-}
-
-fn do_pec_hasher_lookup_table_bench(b: &mut Bencher, size: &usize) {
-    let mut v: Vec<u8> = Vec::with_capacity(*size);
-    fill_random(&mut v);
-    b.iter(|| {
-        let mut hasher = SmbusPecLookupTable::new();
-        hasher.write(&v);
-        let pec = hasher.finish();
-        black_box(&pec);
-    });
-}
+crc8_hasher_lookup_table!(struct SmbusPecLookupTable, 0, LOOKUP_TABLE, "");
 
 fn fill_random(v: &mut Vec<u8>) {
     let mut rng = SmallRng::from_entropy();
@@ -60,16 +17,46 @@ fn fill_random(v: &mut Vec<u8>) {
 
 const MESSAGE_SIZES: [usize; 7] = [1, 3, 5, 20, 50, 100, 500];
 
-fn benchmarks(byte_sizes: &[usize]) -> ParameterizedBenchmark<usize> {
-    ParameterizedBenchmark::new("pec", do_pec_bench, byte_sizes.iter().cloned())
-        .throughput(|s| Throughput::Bytes(*s as u64))
-        .with_function("pec_lookup_table", do_pec_lookup_table_bench)
-        .with_function("pec_hasher", do_pec_hasher_bench)
-        .with_function("pec_hasher_lookup_table", do_pec_hasher_lookup_table_bench)
-}
-
 fn bench(c: &mut Criterion) {
-    c.bench("bench", benchmarks(&MESSAGE_SIZES[..]));
+    let mut group = c.benchmark_group("pec");
+    for size in &MESSAGE_SIZES {
+        group.throughput(Throughput::Bytes(*size as u64));
+        let mut data: Vec<u8> = Vec::with_capacity(*size);
+        fill_random(&mut data);
+        group.bench_with_input(format!("pec/{}", *size), &data, |b, data| {
+            b.iter(|| {
+                let pec = pec(data);
+                black_box(&pec);
+            });
+        });
+        group.bench_with_input(format!("pec_lookup_table/{}", *size), &data, |b, data| {
+            b.iter(|| {
+                let pec = pec_lookup_table(data);
+                black_box(&pec);
+            });
+        });
+        group.bench_with_input(format!("pec_hasher/{}", *size), &data, |b, data| {
+            b.iter(|| {
+                let mut hasher = SmbusPec::new();
+                hasher.write(data);
+                let pec = hasher.finish();
+                black_box(&pec);
+            });
+        });
+        group.bench_with_input(
+            format!("pec_hasher_lookup_table/{}", *size),
+            &data,
+            |b, data| {
+                b.iter(|| {
+                    let mut hasher = SmbusPecLookupTable::new();
+                    hasher.write(data);
+                    let pec = hasher.finish();
+                    black_box(&pec);
+                });
+            },
+        );
+    }
+    group.finish();
 }
 
 criterion_group!(benches, bench);

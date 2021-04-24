@@ -25,7 +25,7 @@ name = "benchmarks"
 harness = false
 
 [dev-dependencies]
-criterion = "0.3"
+criterion = { version="0.3.4", features=["html_reports"] }
 rand = "0.6" # 0.7 is not compatible with Rust 1.31.0
 
 [profile.bench]
