@@ -110,7 +110,7 @@
 //! # const LOOKUP_TABLE: [u8; 256] = [0; 256];
 //! ```
 
-#![doc(html_root_url = "https://docs.rs/embedded-crc-macros/0.1.0")]
+#![doc(html_root_url = "https://docs.rs/embedded-crc-macros/1.0.0")]
 #![deny(unsafe_code, missing_docs)]
 #![no_std]
 
